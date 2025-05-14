@@ -14,7 +14,14 @@ const userRoutes = require('./routes/userRoutes')
 const app = express();
 
 // Middleware
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',          // local dev
+    'https://nbmis.vercel.app' // production
+  ],
+  credentials: true,
+}));
 app.use(express.json());
 
 // Routes
