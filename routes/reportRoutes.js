@@ -27,4 +27,16 @@ router.get('/sales/pdf', authMiddleware, reportController.downloadSalesPDF);
 router.get('/receipts/excel',authMiddleware, reportController.downloadReceiptsExcel);
 router.get('/receipts/pdf',authMiddleware, reportController.downloadReceiptsPDF);
 
+
+//newly added after distrise wise sale and receipts
+router.get('/district-wise', authMiddleware, reportController.getDistrictWiseReports);
+
+router.get('/districtwise/sales/pdf', authMiddleware,  reportController.downloadDistrictwiseSalesPdf);
+router.get('/districtwise/sales/excel', authMiddleware,  reportController.downloadDistrictwiseSalesExcel);
+
+router.get('/districtwise/receipts/pdf', authMiddleware,  reportController.downloadDistrictwiseReceiptsPdf);
+router.get('/districtwise/receipts/excel', authMiddleware,  reportController.downloadDistrictwiseReceiptsExcel);
+
+
+
 module.exports = router;
