@@ -2621,7 +2621,261 @@ downloadReceiptsExcel: async (req, res) => {
   
   //   doc.end();
   // },
-  downloadSalesPDF: async (req, res) => {
+//   downloadSalesPDF: async (req, res) => {
+//   const { startDate, endDate } = req.query;
+//   const userBranch = req.user?.branch;
+
+//   if (!userBranch) {
+//     return res.status(400).json({ error: 'User branch missing in token' });
+//   }
+
+//   const formattedStartDate = moment(startDate).format('YYYY-MM-DD');
+//   const formattedEndDate = moment(endDate).format('YYYY-MM-DD');
+
+//   const allDistricts = await District.find().lean();
+//   const sales = await Sale.find({
+//     date: { $gte: formattedStartDate, $lte: formattedEndDate }
+//   }).lean();
+
+//   sales.forEach(s => {
+//     s.district = allDistricts.find(d => d.name === s.district?.toUpperCase());
+//   });
+
+//   const filteredSales = sales.filter(s => s.district?.branch === userBranch);
+
+//   // Sort by date then district
+//   filteredSales.sort((a, b) => {
+//     const dateCmp = new Date(a.date) - new Date(b.date);
+//     if (dateCmp !== 0) return dateCmp;
+//     return a.district.name.localeCompare(b.district.name);
+//   });
+
+//   const doc = new PDFDocument({ margin: 40, size: 'A4' });
+//   res.setHeader('Content-Type', 'application/pdf');
+//   res.setHeader('Content-Disposition', `attachment; filename=sales-${startDate}_to_${endDate}.pdf`);
+//   doc.pipe(res);
+
+//   doc.fontSize(16).text('Sales Report', { align: 'center' }).moveDown();
+//   // doc.fontSize(12).text(`Date Range: ${formattedStartDate} to ${formattedEndDate}`).moveDown();
+//   doc.fontSize(12).text(`Date Range: ${moment(startDate).format('DD-MM-YYYY')} to ${moment(endDate).format('DD-MM-YYYY')}`).moveDown();
+
+
+//   const tableTop = doc.y + 10;
+//   const rowHeight = 22;
+//   const columnWidths = [80, 100, 80, 80, 80, 80]; // Date, District, Cash, Private, Gov, Total
+//   const columns = ['Date', 'District', 'Cash', 'Private', 'Gov', 'Total'];
+//   const xStart = 40;
+
+//   // Draw table headers
+//   doc.font('Helvetica-Bold');
+//   let x = xStart;
+//   columns.forEach((col, i) => {
+//     doc.rect(x, tableTop, columnWidths[i], rowHeight).stroke();
+//     doc.text(col, x + 5, tableTop + 6);
+//     x += columnWidths[i];
+//   });
+
+//   // Table rows
+//   let y = tableTop + rowHeight;
+//   let lastDate = '';
+//   let totalCash = 0, totalPrivate = 0, totalGov = 0;
+
+//   doc.font('Helvetica');
+//   filteredSales.forEach((sale) => {
+//     const currentDate = moment(sale.date).format('DD-MM-YYYY');
+
+//     const displayDate = currentDate !== lastDate ? currentDate : '';
+//     const total = (sale.cash || 0) + (sale.private || 0) + (sale.gov || 0);
+
+    
+
+//     const row = [
+//       displayDate,
+//       sale.district.name,
+//       (sale.cash || 0).toFixed(2),
+//       (sale.private || 0).toFixed(2),
+//       (sale.gov || 0).toFixed(2),
+//       total.toFixed(2)
+//     ];
+
+//     x = xStart;
+//     row.forEach((cell, i) => {
+//       doc.rect(x, y, columnWidths[i], rowHeight).stroke();
+//       doc.text(cell, x + 5, y + 6);
+//       x += columnWidths[i];
+//     });
+
+//     totalCash += sale.cash || 0;
+//     totalPrivate += sale.private || 0;
+//     totalGov += sale.gov || 0;
+//     lastDate = currentDate;
+//     y += rowHeight;
+
+//     if (y + rowHeight > doc.page.height - 50) {
+//       doc.addPage();
+//       y = 40;
+
+//       // Redraw headers on new page
+//       doc.font('Helvetica-Bold');
+//       x = xStart;
+//       columns.forEach((col, i) => {
+//         doc.rect(x, y, columnWidths[i], rowHeight).stroke();
+//         doc.text(col, x + 5, y + 6);
+//         x += columnWidths[i];
+//       });
+//       y += rowHeight;
+//       doc.font('Helvetica');
+//     }
+//   });
+
+//   // Grand Total Row
+//   doc.font('Helvetica-Bold');
+//   const grandTotal = (totalCash + totalPrivate + totalGov).toFixed(2);
+//   const totals = [
+//     '', 'Grand Total',
+//     totalCash.toFixed(2),
+//     totalPrivate.toFixed(2),
+//     totalGov.toFixed(2),
+//     grandTotal
+//   ];
+
+//   x = xStart;
+//   totals.forEach((cell, i) => {
+//     doc.rect(x, y, columnWidths[i], rowHeight).stroke();
+//     doc.text(cell, x + 5, y + 6);
+//     x += columnWidths[i];
+//   });
+
+//   doc.end();
+// },
+// downloadSalesPDF: async (req, res) => {
+//   const { startDate, endDate } = req.query;0.
+  
+//   const userBranch = req.user?.branch;
+
+//   if (!userBranch) {
+//     return res.status(400).json({ error: 'User branch missing in token' });
+//   }
+
+//   const formattedStartDate = moment(startDate).format('YYYY-MM-DD');
+//   const formattedEndDate = moment(endDate).format('YYYY-MM-DD');
+
+//   const allDistricts = await District.find().lean();
+//   const sales = await Sale.find({
+//     date: { $gte: formattedStartDate, $lte: formattedEndDate }
+//   }).lean();
+
+//   sales.forEach(s => {
+//     s.district = allDistricts.find(d => d.name === s.district?.toUpperCase());
+//   });
+
+//   const filteredSales = sales.filter(s => s.district?.branch === userBranch);
+
+//   // Sort by date then district
+//   filteredSales.sort((a, b) => {
+//     const dateCmp = new Date(a.date) - new Date(b.date);
+//     if (dateCmp !== 0) return dateCmp;
+//     return a.district.name.localeCompare(b.district.name);
+//   });
+
+//   const doc = new PDFDocument({ margin: 40, size: 'A4' });
+//   res.setHeader('Content-Type', 'application/pdf');
+//   res.setHeader('Content-Disposition', `attachment; filename=sales-${startDate}_to_${endDate}.pdf`);
+//   doc.pipe(res);
+
+//   doc.fontSize(16).text('Sales Report', { align: 'center' }).moveDown();
+//   doc.fontSize(12).text(
+//     `Date Range: ${moment(startDate).format('DD-MM-YYYY')} to ${moment(endDate).format('DD-MM-YYYY')}`
+//   ).moveDown();
+
+//   const rowHeight = 22;
+//   const columnWidths = [80, 100, 80, 80, 80, 80];
+//   const columns = ['Date', 'District', 'Cash', 'Private', 'Gov', 'Total'];
+//   const xStart = 40;
+//   let y = doc.y + 10;
+
+//   const drawHeaders = () => {
+//     doc.font('Helvetica-Bold');
+//     let x = xStart;
+//     columns.forEach((col, i) => {
+//       doc.rect(x, y, columnWidths[i], rowHeight).stroke();
+//       doc.text(col, x + 5, y + 6, { align: 'justify' });
+//       x += columnWidths[i];
+//     });
+//     y += rowHeight;
+//     doc.font('Helvetica');
+//   };
+
+//   drawHeaders();
+
+//   let lastDate = '';
+//   let totalCash = 0, totalPrivate = 0, totalGov = 0;
+
+//   filteredSales.forEach((sale) => {
+//     const currentDate = moment(sale.date).format('DD-MM-YYYY');
+//     const displayDate = currentDate !== lastDate ? currentDate : '';
+
+//     const cash = sale.cash ? Math.ceil(sale.cash) : 0;
+//     const privateAmt = sale.private ? Math.ceil(sale.private) : 0;
+//     const gov = sale.gov ? Math.ceil(sale.gov) : 0;
+//     const total = cash + privateAmt + gov;
+
+//     const row = [
+//       displayDate,
+//       sale.district.name,
+//       cash || '',
+//       privateAmt || '',
+//       gov || '',
+//       total || ''
+//     ];
+
+//     let x = xStart;
+//     row.forEach((cell, i) => {
+//       doc.rect(x, y, columnWidths[i], rowHeight).stroke();
+//       doc.text(String(cell), x + 5, y + 6, {
+//         align: 'right',
+//         width: columnWidths[i] - 10
+//       });
+//       x += columnWidths[i];
+//     });
+
+//     totalCash += cash;
+//     totalPrivate += privateAmt;
+//     totalGov += gov;
+//     lastDate = currentDate;
+//     y += rowHeight;
+
+//     if (y + rowHeight > doc.page.height - 50) {
+//       doc.addPage();
+//       y = 40;
+//       drawHeaders();
+//     }
+//   });
+
+//   // Grand Total Row
+//   const grandTotal = totalCash + totalPrivate + totalGov;
+//   const totals = [
+//     '', 'Grand Total',
+//     totalCash || '',
+//     totalPrivate || '',
+//     totalGov || '',
+//     grandTotal || ''
+//   ];
+
+//   doc.font('Helvetica-Bold');
+//   let x = xStart;
+//   totals.forEach((cell, i) => {
+//     doc.rect(x, y, columnWidths[i], rowHeight).stroke();
+//     doc.text(String(cell), x + 5, y + 6, {
+//       align: 'right',
+//       width: columnWidths[i] - 10
+//     });
+//     x += columnWidths[i];
+//   });
+
+//   doc.end();
+// },
+downloadSalesPDF: async (req, res) => {
   const { startDate, endDate } = req.query;
   const userBranch = req.user?.branch;
 
@@ -2655,94 +2909,100 @@ downloadReceiptsExcel: async (req, res) => {
   res.setHeader('Content-Disposition', `attachment; filename=sales-${startDate}_to_${endDate}.pdf`);
   doc.pipe(res);
 
-  doc.fontSize(16).text('Sales Report', { align: 'center' }).moveDown();
-  // doc.fontSize(12).text(`Date Range: ${formattedStartDate} to ${formattedEndDate}`).moveDown();
-  doc.fontSize(12).text(`Date Range: ${moment(startDate).format('DD-MM-YYYY')} to ${moment(endDate).format('DD-MM-YYYY')}`).moveDown();
+  doc.fontSize(14).font('Helvetica-Bold').text(`Edition: ${userBranch}`, { align: 'left' });
+  doc.fontSize(16).font('Helvetica-Bold').text('Sales Report', { align: 'center' });
+  
+  doc.fontSize(12).font('Helvetica').text(
+    `Date Range: ${moment(startDate).format('DD-MM-YYYY')} to ${moment(endDate).format('DD-MM-YYYY')}`,
+    { align: 'center' }
+  );
+  doc.moveDown();
 
-
-  const tableTop = doc.y + 10;
   const rowHeight = 22;
-  const columnWidths = [80, 100, 80, 80, 80, 80]; // Date, District, Cash, Private, Gov, Total
+  const columnWidths = [80, 100, 80, 80, 80, 80];
   const columns = ['Date', 'District', 'Cash', 'Private', 'Gov', 'Total'];
   const xStart = 40;
+  let y = doc.y + 10;
 
-  // Draw table headers
-  doc.font('Helvetica-Bold');
-  let x = xStart;
-  columns.forEach((col, i) => {
-    doc.rect(x, tableTop, columnWidths[i], rowHeight).stroke();
-    doc.text(col, x + 5, tableTop + 6);
-    x += columnWidths[i];
-  });
+  const drawHeaders = () => {
+    doc.font('Helvetica-Bold');
+    let x = xStart;
+    columns.forEach((col, i) => {
+      doc.rect(x, y, columnWidths[i], rowHeight).stroke();
+      doc.text(col, x, y + 6, {
+        align: 'center',
+        width: columnWidths[i]
+      });
+      x += columnWidths[i];
+    });
+    y += rowHeight;
+    doc.font('Helvetica');
+  };
 
-  // Table rows
-  let y = tableTop + rowHeight;
+  drawHeaders();
+
   let lastDate = '';
   let totalCash = 0, totalPrivate = 0, totalGov = 0;
 
-  doc.font('Helvetica');
   filteredSales.forEach((sale) => {
     const currentDate = moment(sale.date).format('DD-MM-YYYY');
-
     const displayDate = currentDate !== lastDate ? currentDate : '';
-    const total = (sale.cash || 0) + (sale.private || 0) + (sale.gov || 0);
 
-    
+    const cash = sale.cash ? Math.ceil(sale.cash) : 0;
+    const privateAmt = sale.private ? Math.ceil(sale.private) : 0;
+    const gov = sale.gov ? Math.ceil(sale.gov) : 0;
+    const total = cash + privateAmt + gov;
 
     const row = [
       displayDate,
       sale.district.name,
-      (sale.cash || 0).toFixed(2),
-      (sale.private || 0).toFixed(2),
-      (sale.gov || 0).toFixed(2),
-      total.toFixed(2)
+      cash || '',
+      privateAmt || '',
+      gov || '',
+      total || ''
     ];
 
-    x = xStart;
+    let x = xStart;
     row.forEach((cell, i) => {
       doc.rect(x, y, columnWidths[i], rowHeight).stroke();
-      doc.text(cell, x + 5, y + 6);
+      doc.text(String(cell), x + 5, y + 6, {
+        align: i === 1 ? 'left' : 'right', // District column left aligned
+        width: columnWidths[i] - 10
+      });
       x += columnWidths[i];
     });
 
-    totalCash += sale.cash || 0;
-    totalPrivate += sale.private || 0;
-    totalGov += sale.gov || 0;
+    totalCash += cash;
+    totalPrivate += privateAmt;
+    totalGov += gov;
     lastDate = currentDate;
     y += rowHeight;
 
     if (y + rowHeight > doc.page.height - 50) {
       doc.addPage();
       y = 40;
-
-      // Redraw headers on new page
-      doc.font('Helvetica-Bold');
-      x = xStart;
-      columns.forEach((col, i) => {
-        doc.rect(x, y, columnWidths[i], rowHeight).stroke();
-        doc.text(col, x + 5, y + 6);
-        x += columnWidths[i];
-      });
-      y += rowHeight;
-      doc.font('Helvetica');
+      drawHeaders();
     }
   });
 
   // Grand Total Row
-  doc.font('Helvetica-Bold');
-  const grandTotal = (totalCash + totalPrivate + totalGov).toFixed(2);
+  const grandTotal = totalCash + totalPrivate + totalGov;
   const totals = [
     '', 'Grand Total',
-    totalCash.toFixed(2),
-    totalPrivate.toFixed(2),
-    totalGov.toFixed(2),
-    grandTotal
+    totalCash || '',
+    totalPrivate || '',
+    totalGov || '',
+    grandTotal || ''
   ];
 
-  x = xStart;
+  doc.font('Helvetica-Bold');
+  let x = xStart;
   totals.forEach((cell, i) => {
     doc.rect(x, y, columnWidths[i], rowHeight).stroke();
-    doc.text(cell, x + 5, y + 6);
+    doc.text(String(cell), x + 5, y + 6, {
+      align: i === 1 ? 'left' : 'right',
+      width: columnWidths[i] - 10
+    });
     x += columnWidths[i];
   });
 
@@ -2812,7 +3072,327 @@ downloadReceiptsExcel: async (req, res) => {
   //   doc.end();
   
   // },
-  downloadReceiptsPDF: async (req, res) => {
+//   downloadReceiptsPDF: async (req, res) => {
+//   const { startDate, endDate } = req.query;
+//   const userBranch = req.user?.branch;
+//   if (!userBranch) {
+//     return res.status(400).json({ error: 'User branch missing in token' });
+//   }
+
+//   const formattedStartDate = moment(startDate).format('YYYY-MM-DD');
+//   const formattedEndDate = moment(endDate).format('YYYY-MM-DD');
+
+//   const allDistricts = await District.find().lean();
+//   const receipts = await Receipt.find({
+//     date: { $gte: formattedStartDate, $lte: formattedEndDate }
+//   }).lean();
+
+//   receipts.forEach(r => {
+//     r.district = allDistricts.find(d => d.name === r.district?.toUpperCase());
+//   });
+
+//   const filteredReceipts = receipts
+//     .filter(r => r.district?.branch === userBranch)
+//     .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+//   const doc = new PDFDocument({ margin: 40 });
+//   res.setHeader('Content-Type', 'application/pdf');
+//   res.setHeader('Content-Disposition', `attachment; filename=receipts-${startDate}_to_${endDate}.pdf`);
+//   doc.pipe(res);
+
+//   doc.fontSize(16).text('Receipts Report', { align: 'center' }).moveDown();
+//   doc.fontSize(12).text(
+//     `Date Range: ${moment(startDate).format('DD-MM-YYYY')} to ${moment(endDate).format('DD-MM-YYYY')}`
+//   ).moveDown();
+
+//   const tableTop = doc.y;
+//   const colWidths = [100, 100, 100, 100, 100];
+//   const headers = ['Date', 'District', 'Cash', 'Private', 'Gov'];
+
+//   // Header row
+//   headers.forEach((h, i) => {
+//     doc.rect(40 + i * colWidths[i], tableTop, colWidths[i], 20).stroke();
+//     doc.text(h, 45 + i * colWidths[i], tableTop + 5);
+//   });
+
+//   let y = tableTop + 20;
+//   let totalCash = 0, totalPrivate = 0, totalGov = 0;
+//   let lastDate = null;
+
+//   filteredReceipts.forEach(r => {
+//     const currentDate = moment(r.date).format('DD-MM-YYYY');
+//     const displayDate = currentDate !== lastDate ? currentDate : '';
+//     const row = [displayDate, r.district.name, r.cash, r.private, r.gov];
+
+//     row.forEach((text, i) => {
+//       doc.rect(40 + i * colWidths[i], y, colWidths[i], 20).stroke();
+//       doc.text(String(text), 45 + i * colWidths[i], y + 5);
+//     });
+
+//     lastDate = currentDate;
+//     totalCash += r.cash;
+//     totalPrivate += r.private;
+//     totalGov += r.gov;
+//     y += 20;
+//   });
+
+//   // Total row
+//   doc.font('Helvetica-Bold');
+//   doc.rect(40, y, colWidths[0] + colWidths[1], 20).stroke();
+//   doc.text('Total', 45, y + 5);
+
+//   [totalCash, totalPrivate, totalGov].forEach((total, i) => {
+//     doc.rect(40 + colWidths[0] + colWidths[1] + i * colWidths[2], y, colWidths[2], 20).stroke();
+//     doc.text(String(total), 45 + colWidths[0] + colWidths[1] + i * colWidths[2], y + 5);
+//   });
+
+//   doc.end();
+// },
+// downloadReceiptsPDF: async (req, res) => {
+//   const { startDate, endDate } = req.query;
+//   const userBranch = req.user?.branch;
+//   if (!userBranch) {
+//     return res.status(400).json({ error: 'User branch missing in token' });
+//   }
+
+//   const formattedStartDate = moment(startDate).format('YYYY-MM-DD');
+//   const formattedEndDate = moment(endDate).format('YYYY-MM-DD');
+
+//   const allDistricts = await District.find().lean();
+//   const receipts = await Receipt.find({
+//     date: { $gte: formattedStartDate, $lte: formattedEndDate }
+//   }).lean();
+
+//   receipts.forEach(r => {
+//     r.district = allDistricts.find(d => d.name === r.district?.toUpperCase());
+//   });
+
+//   const filteredReceipts = receipts
+//     .filter(r => r.district?.branch === userBranch)
+//     .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+//   const doc = new PDFDocument({ margin: 40, size: 'A4' });
+//   res.setHeader('Content-Type', 'application/pdf');
+//   res.setHeader('Content-Disposition', `attachment; filename=receipts-${startDate}_to_${endDate}.pdf`);
+//   doc.pipe(res);
+
+//   let y = 40;
+//   const colWidths = [100, 100, 80, 80, 80, 90]; // Added Total column
+//   const headers = ['Date', 'District', 'Cash', 'Private', 'Gov', 'Total'];
+
+//   const drawHeader = () => {
+//     doc.fontSize(16).font('Helvetica-Bold').text('Receipts Report', { align: 'center' });
+//     doc.fontSize(12).font('Helvetica').text(
+//       `Date Range: ${moment(startDate).format('DD-MM-YYYY')} to ${moment(endDate).format('DD-MM-YYYY')}`,
+//       { align: 'center' }
+//     );
+//     y = doc.y + 20;
+
+//     headers.forEach((h, i) => {
+//       const x = 40 + colWidths.slice(0, i).reduce((a, b) => a + b, 0);
+//       doc.rect(x, y, colWidths[i], 20).stroke();
+//       doc.font('Helvetica-Bold').text(h, x + 5, y + 5, {
+//         align: 'left',
+//         width: colWidths[i] - 10
+//       });
+//     });
+
+//     y += 20;
+//   };
+
+//   const checkPageBreak = () => {
+//     if (y + 30 > doc.page.height - 40) {
+//       doc.addPage();
+//       drawHeader();
+//     }
+//   };
+
+//   drawHeader();
+
+//   let totalCash = 0, totalPrivate = 0, totalGov = 0, totalAll = 0;
+//   let lastDate = null;
+
+//   filteredReceipts.forEach(r => {
+//     checkPageBreak();
+
+//     const currentDate = moment(r.date).format('DD-MM-YYYY');
+//     const displayDate = currentDate !== lastDate ? currentDate : '';
+//     const cash = r.cash ? Math.ceil(r.cash) : 0;
+//     const privateAmt = r.private ? Math.ceil(r.private) : 0;
+//     const gov = r.gov ? Math.ceil(r.gov) : 0;
+//     const total = cash + privateAmt + gov;
+
+//     const values = [
+//       displayDate,
+//       r.district.name,
+//       cash || '',
+//       privateAmt || '',
+//       gov || '',
+//       total || ''
+//     ];
+
+//     values.forEach((text, i) => {
+//       const x = 40 + colWidths.slice(0, i).reduce((a, b) => a + b, 0);
+//       doc.rect(x, y, colWidths[i], 20).stroke();
+//       doc.font('Helvetica').text(String(text), x + 5, y + 5, {
+//         align: 'right',
+//         width: colWidths[i] - 10
+//       });
+//     });
+
+//     totalCash += cash;
+//     totalPrivate += privateAmt;
+//     totalGov += gov;
+//     totalAll += total;
+
+//     lastDate = currentDate;
+//     y += 20;
+//   });
+
+//   // Total row
+//   checkPageBreak();
+//   doc.font('Helvetica-Bold');
+
+//   // Empty first 2 columns, write "Total"
+//   const labelColSpan = colWidths[0] + colWidths[1];
+//   doc.rect(40, y, labelColSpan, 20).stroke();
+//   doc.text('Total', 45, y + 5, { align: 'left' });
+
+//   const totals = [totalCash, totalPrivate, totalGov, totalAll];
+//   totals.forEach((val, i) => {
+//     const x = 40 + labelColSpan + colWidths.slice(2, 2 + i).reduce((a, b) => a + b, 0);
+//     doc.rect(x, y, colWidths[i + 2], 20).stroke();
+//     doc.text(val > 0 ? val : '', x + 5, y + 5, {
+//       align: 'right',
+//       width: colWidths[i + 2] - 10
+//     });
+//   });
+
+//   doc.end();
+// },
+// downloadReceiptsPDF: async (req, res) => {
+//   const { startDate, endDate } = req.query;
+//   const userBranch = req.user?.branch;
+//   if (!userBranch) {
+//     return res.status(400).json({ error: 'User branch missing in token' });
+//   }
+
+//   const formattedStartDate = moment(startDate).format('YYYY-MM-DD');
+//   const formattedEndDate = moment(endDate).format('YYYY-MM-DD');
+
+//   const allDistricts = await District.find().lean();
+//   const receipts = await Receipt.find({
+//     date: { $gte: formattedStartDate, $lte: formattedEndDate }
+//   }).lean();
+
+//   receipts.forEach(r => {
+//     r.district = allDistricts.find(d => d.name === r.district?.toUpperCase());
+//   });
+
+//   const filteredReceipts = receipts
+//     .filter(r => r.district?.branch === userBranch)
+//     .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+//   const doc = new PDFDocument({ margin: 40, size: 'A4' });
+//   res.setHeader('Content-Type', 'application/pdf');
+//   res.setHeader('Content-Disposition', `attachment; filename=receipts-${startDate}_to_${endDate}.pdf`);
+//   doc.pipe(res);
+
+//   let y = 40;
+//   const colWidths = [80, 100, 80, 80, 80, 90]; // Added Total column
+//   const headers = ['Date', 'District', 'Cash', 'Private', 'Gov', 'Total'];
+
+//   const drawHeader = () => {
+//     doc.fontSize(16).font('Helvetica-Bold').text('Receipts Report', { align: 'center' });
+//     doc.fontSize(12).font('Helvetica').text(
+//       `Date Range: ${moment(startDate).format('DD-MM-YYYY')} to ${moment(endDate).format('DD-MM-YYYY')}`,
+//       { align: 'center' }
+//     );
+//     y = doc.y + 20;
+
+//     headers.forEach((h, i) => {
+//       const x = 40 + colWidths.slice(0, i).reduce((a, b) => a + b, 0);
+//       doc.rect(x, y, colWidths[i], 20).stroke();
+//       doc.font('Helvetica-Bold').text(h, x, y + 5, {
+//         align: 'center',
+//         width: colWidths[i]
+//       });
+//     });
+
+//     y += 20;
+//   };
+
+//   const checkPageBreak = () => {
+//     if (y + 30 > doc.page.height - 40) {
+//       doc.addPage();
+//       drawHeader();
+//     }
+//   };
+
+//   drawHeader();
+
+//   let totalCash = 0, totalPrivate = 0, totalGov = 0, totalAll = 0;
+//   let lastDate = null;
+
+//   filteredReceipts.forEach(r => {
+//     checkPageBreak();
+
+//     const currentDate = moment(r.date).format('DD-MM-YYYY');
+//     const displayDate = currentDate !== lastDate ? currentDate : '';
+//     const cash = r.cash ? Math.ceil(r.cash) : 0;
+//     const privateAmt = r.private ? Math.ceil(r.private) : 0;
+//     const gov = r.gov ? Math.ceil(r.gov) : 0;
+//     const total = cash + privateAmt + gov;
+
+//     const values = [
+//       displayDate,
+//       r.district.name,
+//       cash || '',
+//       privateAmt || '',
+//       gov || '',
+//       total || ''
+//     ];
+
+//     values.forEach((text, i) => {
+//       const x = 40 + colWidths.slice(0, i).reduce((a, b) => a + b, 0);
+//       doc.rect(x, y, colWidths[i], 20).stroke();
+//       doc.font('Helvetica').text(String(text), x + 5, y + 5, {
+//         align: i === 1 ? 'left' : 'right', // District column left aligned
+//         width: colWidths[i] - 10
+//       });
+//     });
+
+//     totalCash += cash;
+//     totalPrivate += privateAmt;
+//     totalGov += gov;
+//     totalAll += total;
+
+//     lastDate = currentDate;
+//     y += 20;
+//   });
+
+//   // Total row
+//   checkPageBreak();
+//   doc.font('Helvetica-Bold');
+
+//   const labelColSpan = colWidths[0] + colWidths[1];
+//   doc.rect(40, y, labelColSpan, 20).stroke();
+//   doc.text('Total', 45, y + 5, { align: 'left' });
+
+//   const totals = [totalCash, totalPrivate, totalGov, totalAll];
+//   totals.forEach((val, i) => {
+//     const x = 40 + labelColSpan + colWidths.slice(2, 2 + i).reduce((a, b) => a + b, 0);
+//     doc.rect(x, y, colWidths[i + 2], 20).stroke();
+//     doc.text(val > 0 ? val : '', x + 5, y + 5, {
+//       align: 'right',
+//       width: colWidths[i + 2] - 10
+//     });
+//   });
+
+//   doc.end();
+// },
+
+downloadReceiptsPDF: async (req, res) => {
   const { startDate, endDate } = req.query;
   const userBranch = req.user?.branch;
   if (!userBranch) {
@@ -2835,60 +3415,106 @@ downloadReceiptsExcel: async (req, res) => {
     .filter(r => r.district?.branch === userBranch)
     .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-  const doc = new PDFDocument({ margin: 40 });
+  const doc = new PDFDocument({ margin: 40, size: 'A4' });
   res.setHeader('Content-Type', 'application/pdf');
   res.setHeader('Content-Disposition', `attachment; filename=receipts-${startDate}_to_${endDate}.pdf`);
   doc.pipe(res);
 
-  doc.fontSize(16).text('Receipts Report', { align: 'center' }).moveDown();
-  doc.fontSize(12).text(
-    `Date Range: ${moment(startDate).format('DD-MM-YYYY')} to ${moment(endDate).format('DD-MM-YYYY')}`
-  ).moveDown();
+  let y = 40;
+  const colWidths = [80, 100, 80, 80, 80, 90]; // Added Total column
+  const headers = ['Date', 'District', 'Cash', 'Private', 'Gov', 'Total'];
 
-  const tableTop = doc.y;
-  const colWidths = [100, 100, 100, 100, 100];
-  const headers = ['Date', 'District', 'Cash', 'Private', 'Gov'];
+  const drawHeader = () => {
+    doc.fontSize(14).font('Helvetica-Bold').text(`Edition: ${userBranch}`, { align: 'left' });
+    doc.fontSize(16).font('Helvetica-Bold').text('Receipts Report', { align: 'center' });
+    
+    doc.fontSize(12).font('Helvetica').text(
+      `Date Range: ${moment(startDate).format('DD-MM-YYYY')} to ${moment(endDate).format('DD-MM-YYYY')}`,
+      { align: 'center' }
+    );
+    y = doc.y + 20;
 
-  // Header row
-  headers.forEach((h, i) => {
-    doc.rect(40 + i * colWidths[i], tableTop, colWidths[i], 20).stroke();
-    doc.text(h, 45 + i * colWidths[i], tableTop + 5);
-  });
+    headers.forEach((h, i) => {
+      const x = 40 + colWidths.slice(0, i).reduce((a, b) => a + b, 0);
+      doc.rect(x, y, colWidths[i], 20).stroke();
+      doc.font('Helvetica-Bold').text(h, x, y + 5, {
+        align: 'center',
+        width: colWidths[i]
+      });
+    });
 
-  let y = tableTop + 20;
-  let totalCash = 0, totalPrivate = 0, totalGov = 0;
+    y += 20;
+  };
+
+  const checkPageBreak = () => {
+    if (y + 30 > doc.page.height - 40) {
+      doc.addPage();
+      drawHeader();
+    }
+  };
+
+  drawHeader();
+
+  let totalCash = 0, totalPrivate = 0, totalGov = 0, totalAll = 0;
   let lastDate = null;
 
   filteredReceipts.forEach(r => {
+    checkPageBreak();
+
     const currentDate = moment(r.date).format('DD-MM-YYYY');
     const displayDate = currentDate !== lastDate ? currentDate : '';
-    const row = [displayDate, r.district.name, r.cash, r.private, r.gov];
+    const cash = r.cash ? Math.ceil(r.cash) : 0;
+    const privateAmt = r.private ? Math.ceil(r.private) : 0;
+    const gov = r.gov ? Math.ceil(r.gov) : 0;
+    const total = cash + privateAmt + gov;
 
-    row.forEach((text, i) => {
-      doc.rect(40 + i * colWidths[i], y, colWidths[i], 20).stroke();
-      doc.text(String(text), 45 + i * colWidths[i], y + 5);
+    const values = [
+      displayDate,
+      r.district.name,
+      cash || '',
+      privateAmt || '',
+      gov || '',
+      total || ''
+    ];
+
+    values.forEach((text, i) => {
+      const x = 40 + colWidths.slice(0, i).reduce((a, b) => a + b, 0);
+      doc.rect(x, y, colWidths[i], 20).stroke();
+      doc.font('Helvetica').text(String(text), x + 5, y + 5, {
+        align: i === 1 ? 'left' : 'right', // District column left aligned
+        width: colWidths[i] - 10
+      });
     });
 
+    totalCash += cash;
+    totalPrivate += privateAmt;
+    totalGov += gov;
+    totalAll += total;
+
     lastDate = currentDate;
-    totalCash += r.cash;
-    totalPrivate += r.private;
-    totalGov += r.gov;
     y += 20;
   });
 
   // Total row
+  checkPageBreak();
   doc.font('Helvetica-Bold');
-  doc.rect(40, y, colWidths[0] + colWidths[1], 20).stroke();
-  doc.text('Total', 45, y + 5);
 
-  [totalCash, totalPrivate, totalGov].forEach((total, i) => {
-    doc.rect(40 + colWidths[0] + colWidths[1] + i * colWidths[2], y, colWidths[2], 20).stroke();
-    doc.text(String(total), 45 + colWidths[0] + colWidths[1] + i * colWidths[2], y + 5);
+  const labelColSpan = colWidths[0] + colWidths[1];
+  doc.rect(40, y, labelColSpan, 20).stroke();
+  doc.text('Total', 45, y + 5, { align: 'left' });
+
+  const totals = [totalCash, totalPrivate, totalGov, totalAll];
+  totals.forEach((val, i) => {
+    const x = 40 + labelColSpan + colWidths.slice(2, 2 + i).reduce((a, b) => a + b, 0);
+    doc.rect(x, y, colWidths[i + 2], 20).stroke();
+    doc.text(val > 0 ? val : '', x + 5, y + 5, {
+      align: 'right',
+      width: colWidths[i + 2] - 10
+    });
   });
 
   doc.end();
 },
-
  
 
 // downloadDistrictwiseSalesPdf: async (req, res) => {
@@ -3040,6 +3666,120 @@ downloadReceiptsExcel: async (req, res) => {
 //     res.status(500).send("Error generating PDF");
 //   }
 // }
+// downloadDistrictwiseSalesPdf: async (req, res) => {
+//   try {
+//     const { startDate, endDate } = req.query;
+//     const userBranch = req.user?.branch;
+
+//     if (!userBranch || !startDate || !endDate) {
+//       return res.status(400).send("Required parameters missing");
+//     }
+
+//     const allDistricts = await District.find({ branch: userBranch }).lean();
+//     const districtMap = new Map(allDistricts.map(d => [d.name, d]));
+
+//     const sales = await Sale.find({ 
+//       date: { $gte: startDate, $lte: endDate } 
+//     }).lean();
+
+//     const filteredSales = sales.filter(s => districtMap.has(s.district));
+
+//     const salesByDistrict = {};
+//     let grandTotals = { cash: 0, private: 0, gov: 0, total: 0 };
+
+//     filteredSales.forEach(s => {
+//       const d = s.district;
+//       if (!salesByDistrict[d]) {
+//         salesByDistrict[d] = { cash: 0, private: 0, gov: 0, total: 0 };
+//       }
+//       const cash = s.cash || 0;
+//       const privateAmt = s.private || 0;
+//       const gov = s.gov || 0;
+//       const total = cash + privateAmt + gov;
+
+//       salesByDistrict[d].cash += cash;
+//       salesByDistrict[d].private += privateAmt;
+//       salesByDistrict[d].gov += gov;
+//       salesByDistrict[d].total += total;
+
+//       grandTotals.cash += cash;
+//       grandTotals.private += privateAmt;
+//       grandTotals.gov += gov;
+//       grandTotals.total += total;
+//     });
+
+//     // Create PDF
+//     const doc = new PDFDocument({ margin: 40, size: "A4" });
+//     const chunks = [];
+//     doc.on("data", chunk => chunks.push(chunk));
+//     doc.on("end", () => {
+//       const pdfBuffer = Buffer.concat(chunks);
+//       res.setHeader("Content-Type", "application/pdf");
+//       res.setHeader("Content-Disposition", "attachment; filename=districtwise_sales.pdf");
+//       res.send(pdfBuffer);
+//     });
+
+//     // === Header Section ===
+//     doc.fontSize(16).font("Helvetica-Bold").text("District-wise Sales Report", { align: "center" });
+//     doc.moveDown(1);
+//     doc.fontSize(12).font("Helvetica-Bold").text(`Branch: `, { continued: true }).font("Helvetica").text(userBranch);
+//     doc.font("Helvetica-Bold").text(`Start Date: `, { continued: true }).font("Helvetica").text(new Date(startDate).toLocaleDateString("en-IN"));
+//     doc.font("Helvetica-Bold").text(`End Date: `, { continued: true }).font("Helvetica").text(new Date(endDate).toLocaleDateString("en-IN"));
+//     doc.moveDown(1);
+
+//     // === Table Setup ===
+//     const colWidths = [150, 80, 80, 80, 80];
+//     const headers = ["District", "Cash", "Private", "Gov", "Total"];
+//     const startX = doc.x;
+//     let y = doc.y;
+//     const rowHeight = 20;
+
+//     const drawRow = (values, isHeader = false) => {
+//       let x = startX;
+//       values.forEach((val, idx) => {
+//         doc.rect(x, y, colWidths[idx], rowHeight).stroke();
+//         doc.font(isHeader ? "Helvetica-Bold" : "Helvetica")
+//            .fontSize(11)
+//            .text(val, x + 5, y + 5, { width: colWidths[idx] - 10, align: idx === 0 ? 'left' : 'right' });
+//         x += colWidths[idx];
+//       });
+//       y += rowHeight;
+
+//       if (y > doc.page.height - 50) {
+//         doc.addPage();
+//         y = 40;
+//       }
+//     };
+
+//     // === Table Header ===
+//     drawRow(headers, true);
+
+//     // === Table Body ===
+//     Object.entries(salesByDistrict).forEach(([district, totals]) => {
+//       drawRow([
+//         district,
+//         totals.cash.toFixed(2),
+//         totals.private.toFixed(2),
+//         totals.gov.toFixed(2),
+//         totals.total.toFixed(2)
+//       ]);
+//     });
+
+//     // === Grand Total Row ===
+//     drawRow([
+//       "Grand Total",
+//       grandTotals.cash.toFixed(2),
+//       grandTotals.private.toFixed(2),
+//       grandTotals.gov.toFixed(2),
+//       grandTotals.total.toFixed(2)
+//     ], true);
+
+//     doc.end();
+//   } catch (error) {
+//     console.error("Error generating district-wise sales PDF:", error);
+//     res.status(500).send("Error generating PDF");
+//   }
+// }
 downloadDistrictwiseSalesPdf: async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
@@ -3066,9 +3806,10 @@ downloadDistrictwiseSalesPdf: async (req, res) => {
       if (!salesByDistrict[d]) {
         salesByDistrict[d] = { cash: 0, private: 0, gov: 0, total: 0 };
       }
-      const cash = s.cash || 0;
-      const privateAmt = s.private || 0;
-      const gov = s.gov || 0;
+
+      const cash = Math.ceil(s.cash || 0);
+      const privateAmt = Math.ceil(s.private || 0);
+      const gov = Math.ceil(s.gov || 0);
       const total = cash + privateAmt + gov;
 
       salesByDistrict[d].cash += cash;
@@ -3082,7 +3823,7 @@ downloadDistrictwiseSalesPdf: async (req, res) => {
       grandTotals.total += total;
     });
 
-    // Create PDF
+    // === Create PDF ===
     const doc = new PDFDocument({ margin: 40, size: "A4" });
     const chunks = [];
     doc.on("data", chunk => chunks.push(chunk));
@@ -3097,8 +3838,12 @@ downloadDistrictwiseSalesPdf: async (req, res) => {
     doc.fontSize(16).font("Helvetica-Bold").text("District-wise Sales Report", { align: "center" });
     doc.moveDown(1);
     doc.fontSize(12).font("Helvetica-Bold").text(`Branch: `, { continued: true }).font("Helvetica").text(userBranch);
-    doc.font("Helvetica-Bold").text(`Start Date: `, { continued: true }).font("Helvetica").text(new Date(startDate).toLocaleDateString("en-IN"));
-    doc.font("Helvetica-Bold").text(`End Date: `, { continued: true }).font("Helvetica").text(new Date(endDate).toLocaleDateString("en-IN"));
+    
+    // Start and End Dates on one line
+    const formattedStart = new Date(startDate).toLocaleDateString("en-IN");
+    const formattedEnd = new Date(endDate).toLocaleDateString("en-IN");
+    doc.font("Helvetica-Bold").text(`Date Range: `, { continued: true }).font("Helvetica").text(`${formattedStart} to ${formattedEnd}`);
+    
     doc.moveDown(1);
 
     // === Table Setup ===
@@ -3132,20 +3877,20 @@ downloadDistrictwiseSalesPdf: async (req, res) => {
     Object.entries(salesByDistrict).forEach(([district, totals]) => {
       drawRow([
         district,
-        totals.cash.toFixed(2),
-        totals.private.toFixed(2),
-        totals.gov.toFixed(2),
-        totals.total.toFixed(2)
+        Math.ceil(totals.cash),
+        Math.ceil(totals.private),
+        Math.ceil(totals.gov),
+        Math.ceil(totals.total)
       ]);
     });
 
     // === Grand Total Row ===
     drawRow([
       "Grand Total",
-      grandTotals.cash.toFixed(2),
-      grandTotals.private.toFixed(2),
-      grandTotals.gov.toFixed(2),
-      grandTotals.total.toFixed(2)
+      Math.ceil(grandTotals.cash),
+      Math.ceil(grandTotals.private),
+      Math.ceil(grandTotals.gov),
+      Math.ceil(grandTotals.total)
     ], true);
 
     doc.end();
@@ -3154,6 +3899,7 @@ downloadDistrictwiseSalesPdf: async (req, res) => {
     res.status(500).send("Error generating PDF");
   }
 }
+
 ,
 
 // downloadDistrictwiseSalesExcel : async (req, res) => {
@@ -3535,6 +4281,118 @@ downloadDistrictwiseSalesExcel: async (req, res) => {
 //   }
 // }
 
+// downloadDistrictwiseReceiptsPdf: async (req, res) => {
+//   try {
+//     const { startDate, endDate } = req.query;
+//     const userBranch = req.user?.branch;
+
+//     if (!userBranch || !startDate || !endDate) {
+//       return res.status(400).send("Required parameters missing");
+//     }
+
+//     const allDistricts = await District.find({ branch: userBranch }).lean();
+//     const districtMap = new Map(allDistricts.map(d => [d.name, d]));
+
+//     const receipts = await Receipt.find({
+//       date: { $gte: startDate, $lte: endDate }
+//     }).lean();
+
+//     const filteredReceipts = receipts.filter(r => districtMap.has(r.district));
+
+//     const districtWiseTotals = {};
+//     let grandTotals = { cash: 0, private: 0, gov: 0, total: 0 };
+
+//     filteredReceipts.forEach(receipt => {
+//       const districtName = receipt.district;
+//       if (!districtWiseTotals[districtName]) {
+//         districtWiseTotals[districtName] = { cash: 0, private: 0, gov: 0, total: 0 };
+//       }
+
+//       const cash = receipt.cash || 0;
+//       const privateAmt = receipt.private || 0;
+//       const gov = receipt.gov || 0;
+//       const total = cash + privateAmt + gov;
+
+//       districtWiseTotals[districtName].cash += cash;
+//       districtWiseTotals[districtName].private += privateAmt;
+//       districtWiseTotals[districtName].gov += gov;
+//       districtWiseTotals[districtName].total += total;
+
+//       grandTotals.cash += cash;
+//       grandTotals.private += privateAmt;
+//       grandTotals.gov += gov;
+//       grandTotals.total += total;
+//     });
+
+//     const doc = new PDFDocument({ margin: 40, size: "A4" });
+//     const chunks = [];
+//     doc.on("data", chunk => chunks.push(chunk));
+//     doc.on("end", () => {
+//       const pdfBuffer = Buffer.concat(chunks);
+//       res.setHeader("Content-Type", "application/pdf");
+//       res.setHeader("Content-Disposition", "attachment; filename=districtwise_receipts.pdf");
+//       res.send(pdfBuffer);
+//     });
+
+//     // === Header Section ===
+//     doc.fontSize(16).font("Helvetica-Bold").text("District-wise Receipts Report", { align: "center" });
+//     doc.moveDown(1);
+//     doc.fontSize(12).font("Helvetica-Bold").text(`Branch: `, { continued: true }).font("Helvetica").text(userBranch);
+//     doc.font("Helvetica-Bold").text(`Start Date: `, { continued: true }).font("Helvetica").text(new Date(startDate).toLocaleDateString("en-IN"));
+//     doc.font("Helvetica-Bold").text(`End Date: `, { continued: true }).font("Helvetica").text(new Date(endDate).toLocaleDateString("en-IN"));
+//     doc.moveDown(1);
+
+//     // === Table Setup ===
+//     const colWidths = [150, 80, 80, 80, 80];
+//     const headers = ["District", "Cash", "Private", "Gov", "Total"];
+//     const startX = doc.x;
+//     let y = doc.y;
+//     const rowHeight = 20;
+
+//     const drawRow = (values, isHeader = false) => {
+//       let x = startX;
+//       values.forEach((val, idx) => {
+//         doc.rect(x, y, colWidths[idx], rowHeight).stroke();
+//         doc.font(isHeader ? "Helvetica-Bold" : "Helvetica")
+//            .fontSize(11)
+//            .text(val, x + 5, y + 5, { width: colWidths[idx] - 10, align: idx === 0 ? 'left' : 'right' });
+//         x += colWidths[idx];
+//       });
+//       y += rowHeight;
+
+//       if (y > doc.page.height - 50) {
+//         doc.addPage();
+//         y = 40;
+//       }
+//     };
+
+//     drawRow(headers, true);
+
+//     Object.entries(districtWiseTotals).forEach(([district, totals]) => {
+//       drawRow([
+//         district,
+//         totals.cash.toFixed(2),
+//         totals.private.toFixed(2),
+//         totals.gov.toFixed(2),
+//         totals.total.toFixed(2)
+//       ]);
+//     });
+
+//     // === Grand Total Row ===
+//     drawRow([
+//       "Grand Total",
+//       grandTotals.cash.toFixed(2),
+//       grandTotals.private.toFixed(2),
+//       grandTotals.gov.toFixed(2),
+//       grandTotals.total.toFixed(2)
+//     ], true);
+
+//     doc.end();
+//   } catch (error) {
+//     console.error("Error generating district-wise receipts PDF:", error);
+//     res.status(500).send("Error generating PDF");
+//   }
+// }
 downloadDistrictwiseReceiptsPdf: async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
@@ -3562,9 +4420,9 @@ downloadDistrictwiseReceiptsPdf: async (req, res) => {
         districtWiseTotals[districtName] = { cash: 0, private: 0, gov: 0, total: 0 };
       }
 
-      const cash = receipt.cash || 0;
-      const privateAmt = receipt.private || 0;
-      const gov = receipt.gov || 0;
+      const cash = Math.ceil(receipt.cash || 0);
+      const privateAmt = Math.ceil(receipt.private || 0);
+      const gov = Math.ceil(receipt.gov || 0);
       const total = cash + privateAmt + gov;
 
       districtWiseTotals[districtName].cash += cash;
@@ -3591,9 +4449,12 @@ downloadDistrictwiseReceiptsPdf: async (req, res) => {
     // === Header Section ===
     doc.fontSize(16).font("Helvetica-Bold").text("District-wise Receipts Report", { align: "center" });
     doc.moveDown(1);
-    doc.fontSize(12).font("Helvetica-Bold").text(`Branch: `, { continued: true }).font("Helvetica").text(userBranch);
-    doc.font("Helvetica-Bold").text(`Start Date: `, { continued: true }).font("Helvetica").text(new Date(startDate).toLocaleDateString("en-IN"));
-    doc.font("Helvetica-Bold").text(`End Date: `, { continued: true }).font("Helvetica").text(new Date(endDate).toLocaleDateString("en-IN"));
+    doc.fontSize(12).font("Helvetica-Bold").text(`Edition: `, { continued: true }).font("Helvetica").text(userBranch);
+
+    const formattedStart = new Date(startDate).toLocaleDateString("en-IN");
+    const formattedEnd = new Date(endDate).toLocaleDateString("en-IN");
+    doc.font("Helvetica-Bold").text(`Date Range: `, { continued: true }).font("Helvetica").text(`${formattedStart} to ${formattedEnd}`);
+    
     doc.moveDown(1);
 
     // === Table Setup ===
@@ -3625,20 +4486,20 @@ downloadDistrictwiseReceiptsPdf: async (req, res) => {
     Object.entries(districtWiseTotals).forEach(([district, totals]) => {
       drawRow([
         district,
-        totals.cash.toFixed(2),
-        totals.private.toFixed(2),
-        totals.gov.toFixed(2),
-        totals.total.toFixed(2)
+        Math.ceil(totals.cash),
+        Math.ceil(totals.private),
+        Math.ceil(totals.gov),
+        Math.ceil(totals.total)
       ]);
     });
 
     // === Grand Total Row ===
     drawRow([
       "Grand Total",
-      grandTotals.cash.toFixed(2),
-      grandTotals.private.toFixed(2),
-      grandTotals.gov.toFixed(2),
-      grandTotals.total.toFixed(2)
+      Math.ceil(grandTotals.cash),
+      Math.ceil(grandTotals.private),
+      Math.ceil(grandTotals.gov),
+      Math.ceil(grandTotals.total)
     ], true);
 
     doc.end();
