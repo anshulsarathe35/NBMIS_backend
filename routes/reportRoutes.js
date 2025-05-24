@@ -18,6 +18,12 @@ const router = express.Router();
 const reportController = require('../controllers/reportController');
 const { authMiddleware } = require('../middleware/authMiddleware');
 
+const {
+  getBranchReports,
+  downloadSalesPDF,
+  downloadReceiptsPDF
+} = require('../controllers/adminController');
+
 
 router.get('/', authMiddleware, reportController.getReports);
 
@@ -36,6 +42,15 @@ router.get('/districtwise/sales/excel', authMiddleware,  reportController.downlo
 
 router.get('/districtwise/receipts/pdf', authMiddleware,  reportController.downloadDistrictwiseReceiptsPdf);
 router.get('/districtwise/receipts/excel', authMiddleware,  reportController.downloadDistrictwiseReceiptsExcel);
+
+
+
+//branch wise reports added on 22 may
+
+router.post('/branch-reports', authMiddleware, getBranchReports); // No admin check
+router.post('/branch-reports/download/sales', authMiddleware, downloadSalesPDF);
+router.post('/branch-reports/download/receipts', authMiddleware, downloadReceiptsPDF);
+
 
 
 

@@ -2,12 +2,12 @@
 const User = require('../models/User');
 
 exports.updatePermissions = async (req, res) => {
-  const { canSale, canReceipt, canReport } = req.body;
+  const { canSale, canReceipt, canReport , canDistrict, canBranchReports} = req.body;
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      { canSale, canReceipt, canReport },
+      { canSale, canReceipt, canReport, canDistrict, canBranchReports },
       { new: true }
     );
     res.json(updatedUser);

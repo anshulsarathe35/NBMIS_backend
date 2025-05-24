@@ -161,7 +161,7 @@ exports.getProfile = async (req, res) => {
       const userId = req.user?.id; // <- use `id` here
       if (!userId) return res.status(401).json({ message: "Unauthorized" });
   
-      const user = await User.findById(userId).select('name email role canSale canReceipt canReport');
+      const user = await User.findById(userId).select('name email role canSale canReceipt canReport canDistrict canBranchReports');
       if (!user) return res.status(404).json({ message: "User not found" });
   
       res.status(200).json(user);
