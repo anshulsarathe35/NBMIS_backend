@@ -1,15 +1,33 @@
 // controllers/saleController.js
 const Sale = require('../models/Sale');
 
+// exports.getSalesByDate = async (req, res) => {
+//   try {
+//     const { date } = req.query;
+//     const sales = await Sale.find({ date });
+//     res.json(sales);
+//   } catch (err) {
+//     res.status(500).json({ message: 'Failed to fetch sales', error: err.message });
+//   }
+// };
+
+//added after 25may
 exports.getSalesByDate = async (req, res) => {
   try {
-    const { date } = req.query;
-    const sales = await Sale.find({ date });
+    const { date, branch } = req.query;
+
+    const query = { date };
+    if (branch) {
+      query.branch = branch;
+    }
+
+    const sales = await Sale.find(query);
     res.json(sales);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch sales', error: err.message });
   }
 };
+
 
 // exports.createOrUpdateSale = async (req, res) => {
 //   try {

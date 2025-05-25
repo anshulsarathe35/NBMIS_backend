@@ -1,15 +1,32 @@
 // controllers/receiptController.js
 const Receipt = require('../models/Receipt');
 
+// exports.getReceiptsByDate = async (req, res) => {
+//   try {
+//     const { date } = req.query;
+//     const receipts = await Receipt.find({ date });
+//     res.json(receipts);
+//   } catch (err) {
+//     res.status(500).json({ message: 'Failed to fetch receipts', error: err.message });
+//   }
+// };
+
 exports.getReceiptsByDate = async (req, res) => {
   try {
-    const { date } = req.query;
-    const receipts = await Receipt.find({ date });
+    const { date, branch } = req.query;
+
+    const query = { date };
+    if (branch) {
+      query.branch = branch;
+    }
+
+    const receipts = await Receipt.find(query);
     res.json(receipts);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch receipts', error: err.message });
   }
 };
+
 
 // exports.createOrUpdateReceipt = async (req, res) => {
 //   try {
