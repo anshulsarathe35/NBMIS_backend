@@ -12,8 +12,12 @@ router.get('/', authMiddleware, districtController.getAllDistricts);
 
 //added for dev
 router.post('/', authMiddleware, districtController.createDistrict);
-router.put('/:id', authMiddleware, adminMiddleware, districtController.updateDistrict);
-router.delete('/:id', authMiddleware, adminMiddleware, districtController.deleteDistrict);
+// router.put('/:id', authMiddleware, adminMiddleware, districtController.updateDistrict);
+// router.delete('/:id', authMiddleware, adminMiddleware, districtController.deleteDistrict);
+
+//added after removing adminmiddleware
+router.put('/:id', authMiddleware, districtController.updateDistrict);
+router.delete('/:id', authMiddleware, districtController.deleteDistrict);
 
 router.get('/branch', authMiddleware, districtController.getDistrictsByBranch)
 
